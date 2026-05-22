@@ -46,18 +46,20 @@ cd ssh-guardian
 ```
 
 ### 2. Установка переменных окружения
+⚠️ **Важно:** Для работы через PAM/SSH переменные должны быть доступны в **системном окружении**, а не только в пользовательской сессии.
 
-Добавьте в `~/.bashrc`:
-
+Добавьте их в `/etc/environment`:
 ```bash
-echo 'export TELEGRAM_BOT_TOKEN="ВАШ_ТОКЕН"' >> ~/.bashrc
-echo 'export TELEGRAM_CHAT_ID="ВАШ_CHAT_ID"' >> ~/.bashrc
+sudo nano /etc/environment
 ```
-
-Примените изменения:
-
+Вставьте в конец файла (без `export`):
+```
+TELEGRAM_BOT_TOKEN="ВАШ_ТОКЕН"
+TELEGRAM_CHAT_ID="ВАШ_CHAT_ID"
+```
+Сохраните файл (`Ctrl+O` → `Enter` → `Ctrl+X`) и перезапустите SSH для применения:
 ```bash
-source ~/.bashrc
+sudo systemctl restart sshd
 ```
 
 ### 3. Установка прав
