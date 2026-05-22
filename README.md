@@ -41,7 +41,7 @@
 ### 1. Клонирование репозитория
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/ssh-guardian.git
+git clone https://github.com/luhverchikv/ssh-guardian.git
 cd ssh-guardian
 ```
 
