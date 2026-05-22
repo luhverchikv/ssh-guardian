@@ -18,9 +18,6 @@
 # Или добавьте в /etc/environment или ~/.bashrc
 # ============================================
 
-# Директория для маркеров (предотвращение дублей)
-MARKER_DIR="/tmp/telegram-login-markers"
-
 # Переменные из окружения
 TELEGRAM_BOT_TOKEN="${TELEGRAM_BOT_TOKEN}"
 TELEGRAM_CHAT_ID="${TELEGRAM_CHAT_ID}"
@@ -41,30 +38,6 @@ send_telegram_message() {
         -d parse_mode="HTML"
 }
 
-# Проверка - было ли уже отправлено уведомление для этой сессии
-check_duplicate_session() {
-    local tty="$1"
-    local timestamp="$2"
-
-    # Создаём директорию для маркеров если её нет
-    mkdir -p "$MARKER_DIR"
-
-    # Имя файла-маркера: TTY + первые 10 символов timestamp
-    local marker_file="${MARKER_DIR}/$(basename ${tty})_${timestamp:0:10}"
-
-    # Проверяем существование маркера
-    if [ -f "$marker_file" ]; then
-        return 1  # Дубликат - уже отправляли
-    fi
-
-    # Создаём маркер
-    touch "$marker_file"
-
-    # Удаляем маркеры старше 1 часа (cleanup)
-    find "$MARKER_DIR" -type f -mmin +60 -delete 2>/dev/null
-
-    return 0  # Не дубликат - можно отправлять
-}
 
 # Получение информации о входе
 get_login_info() {
@@ -128,12 +101,7 @@ main() {
     local login_info=$(get_login_info)
     IFS='|' read -r username hostname ip_address tty timestamp session_type <<< "$login_info"
 
-    # Проверка на дубликат
-    if ! check_duplicate_session "$tty" "$timestamp"; then
-        echo "Уведомление уже отправлено для этой сессии (tty=$tty)"
-        exit 0
-    fi
-
+    
     # Формирование и отправка сообщения
     local message=$(format_message "$login_info")
     send_telegram_message "$message"
