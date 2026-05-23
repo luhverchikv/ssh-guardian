@@ -44,8 +44,23 @@
 git clone https://github.com/luhverchikv/ssh-guardian.git
 cd ssh-guardian
 ```
+## 2. Настройка Telegram
 
-### 2. Установка переменных окружения
+### Получение Bot Token
+
+1. Откройте Telegram
+2. Найдите **@BotFather**
+3. Отправьте `/newbot`
+4. Следуйте инструкциям и сохраните токен
+
+### Получение Chat ID
+1. Найдите бота **@userinfobot**
+2. Отправьте `/start`
+3. Скопируруйте ваш Chat ID
+
+---
+### 3. Установка переменных окружения
+
 ⚠️ **Важно:** Для работы через PAM/SSH переменные должны быть доступны в **системном окружении**, а не только в пользовательской сессии.
 
 Добавьте их в `/etc/environment`:
@@ -57,39 +72,9 @@ sudo nano /etc/environment
 TELEGRAM_BOT_TOKEN="ВАШ_ТОКЕН"
 TELEGRAM_CHAT_ID="ВАШ_CHAT_ID"
 ```
-Сохраните файл (`Ctrl+O` → `Enter` → `Ctrl+X`) и перезапустите SSH для применения:
-```bash
-sudo systemctl restart sshd
-```
+Сохраните файл (`Ctrl+O` → `Enter` → `Ctrl+X`) 
 
-### 3. Установка прав
-
-```bash
-chmod +x telegram_login_notify.sh
-```
-
----
-
-## 🔧 Настройка Telegram
-
-### Получение Bot Token
-
-1. Откройте Telegram
-2. Найдите **@BotFather**
-3. Отправьте `/newbot`
-4. Следуйте инструкциям и сохраните токен
-
-### Получение Chat ID
-
-1. Найдите бота **@userinfobot**
-2. Отправьте `/start`
-3. Скопируруйте ваш Chat ID
-
----
-
-## 📦 Установка через PAM (SSH)
-
-### 1. Установка скрипта
+### 4. Установка скрипта
 
 ```bash
 # Скопируйте скрипт в системную директорию
@@ -99,7 +84,7 @@ sudo cp telegram_login_notify.sh /usr/local/bin/telegram_login_notify.sh
 sudo chmod +x /usr/local/bin/telegram_login_notify.sh
 ```
 
-### 2. Настройка PAM для SSH
+### 5. Настройка PAM для SSH
 
 Откройте файл конфигурации PAM для SSH:
 
@@ -113,7 +98,7 @@ sudo nano /etc/pam.d/sshd
 session optional pam_exec.so /usr/local/bin/telegram_login_notify.sh
 ```
 
-### 3. Перезапустите SSH
+### 6. Перезапустите SSH
 
 ```bash
 sudo systemctl restart sshd
