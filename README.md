@@ -104,6 +104,15 @@ session optional pam_exec.so /usr/local/bin/telegram_login_notify.sh
 sudo systemctl restart sshd
 ```
 
+### 7. Выполните вход на сервер по SSH
+
+Поздравляю, вы настроили уведомления о входе на сервер!
+Теперь можно удалить скачаную директорию с GitHub репозиторием
+
+```bash
+sudo rm -rf ssh-guardian/
+```
+
 ---
 
 > **Примечание:** Скрипт срабатывает только при SSH-подключении. При каждом новом входе вы получите уведомление в Telegram.
